@@ -8,11 +8,11 @@ Utilizing Z3 Solvers, our project can find all possible solutions to a standard 
 
 
 # Setup 
-# Installing Python 3.9.4
+## Installing Python 3.9.4
 Python 3.9.4 can be downloaded [here](https://www.python.org/downloads/release/python-394/)
 
-# Installing the Z3 theorem prover on MacOS via terminal.
-## Building Z3 using make and GCC/Clang
+## Installing the Z3 theorem prover on MacOS via terminal.
+Building Z3 using make and GCC/Clang
 
 ```
 git clone https://github.com/Z3Prover/z3.git
