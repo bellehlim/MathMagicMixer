@@ -107,7 +107,6 @@ def for5terms(target, given):
         t.add(oneIterFor5(a, target, given))
         if t.check() == sat:
             achievable.append(target)
-    return achievable
 
 #handles single case if a can be incorated to reach target with rest of lst
 def oneIterFor5(a, target, given):
