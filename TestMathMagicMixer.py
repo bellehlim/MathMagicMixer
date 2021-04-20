@@ -48,7 +48,10 @@ def testOneIterFor4():
 
 #Test for5terms
 def testFor5Terms():
-    assert for5terms(73, [1,2,3,4,5]) == None
+    assert for5terms(31, [1, 2, 3, 4, 5]) == [31, 31, 31, 31, 31]
+    assert for5terms(21, [1, 2, 3, 4, 6]) == [21, 21, 21, 21, 21]
+    assert not for5terms(71, [1, 2, 3, 4, 5]) == [71]
+    assert not for5terms(24, [1, 2, 3, 4, 5]) == None
 
 #Test findAddValWith
 def testFindAddValWith():
