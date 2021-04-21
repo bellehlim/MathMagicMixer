@@ -65,9 +65,20 @@ def testFindSubValWith():
     assert findSubValWith(21, 15, [6, 4], 2) == False
     assert findSubValWith(21, 11, [6, 4, 1], 3) == False
     
+#Test findDivValWith
+def testFindDivValWith():
+    assert findDivValWith(1,5,[2,3,4],2) == True
+    assert findDivValWith(4,2,[2,5,3],1) == True
+    assert findDivValWith(4,7,[12,5,3],2) == False
+
+#Test findMulValWith
+def testFindMulValWith():
+    assert findMulValWith(4,7,[12,5,3],2) == False
+    assert findMulValWith(2,16,[8,5,8],3) == True
+    assert findMulValWith(3,21,[7,5,4,9],4) == True
     
+#Will print "Everything passed" if none of the test fails
 if __name__ == "__main__":
-    
     testOneOf()
     testBinOp()
     testRemoveFrom()
@@ -78,4 +89,6 @@ if __name__ == "__main__":
     testFor5Terms()
     testFindAddValWith()
     testFindSubValWith()
+    testFindDivValWith()
+    testFindMulValWith()
     print("Everything passed")
