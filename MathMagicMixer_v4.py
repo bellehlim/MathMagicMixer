@@ -104,6 +104,8 @@ def findSolutions(target, given):
     print("done")
 
 #removes quotation marks from accessed string item in array when printing (ex. instead of printing (3 "*" 2), print (3 * 2))     
+#Taken from Z3Py documentation:
+#https://z3prover.github.io/api/html/classz3py_1_1_seq_ref.html#aed8194b891258fc0b90afdc8ca371eaa
 def as_string(self):
          """Return a string representation of sequence expression."""
          if self.is_string_value():
