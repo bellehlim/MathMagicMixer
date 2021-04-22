@@ -44,6 +44,7 @@ def pentaOp(target, a, o1, b, o2, c, o3, d, o4, e):
               And(o4 == '-', quadOp(r1 + r2, a, o1, b, o2, c, o3, d)),
               And(o4 == '+', quadOp(r1 - r2, a, o1, b, o2, c, o3, d)))
 
+#NOT CURRENTLY USED -- will use when trying to allow for cases of duplicate dice (ex. [1, 1, 2, 4, 5])
 #returns the list with _a_ removed (once) if present
 def removeIfPresent(a, lst):
     if a in lst:
@@ -52,6 +53,7 @@ def removeIfPresent(a, lst):
     else:
         return lst
 
+#NOT CURRENTLY USED -- will use when trying to allow for cases of duplicate dice (ex. [1, 1, 2, 4, 5])
 #checks each of the five items matches to 1 instance in the given list
 def our_distinct(a, b, c, d, e, given):
     z = And(a in given,
