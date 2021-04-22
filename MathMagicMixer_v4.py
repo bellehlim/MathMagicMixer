@@ -90,7 +90,6 @@ def findSolutions(target, given):
         op3 = as_string(t.model()[o3])
         op4 = as_string(t.model()[o4])
         print ("((((", n1, op1, n2, ")", op2, n3, ")", op3, n4, ")", op4, n5, ")")
-        #print ("((((", t.model()[a].as_long(), op1, t.model()[b].as_long(), ")", op2, t.model()[c].as_long(), ")", op3, t.model()[d].as_long(), ")", op4, t.model()[d].as_long(), ")")
         t.add(Not(And(a == t.model()[a],
                       b == t.model()[b],
                       c == t.model()[c],
