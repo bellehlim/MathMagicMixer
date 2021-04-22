@@ -1,94 +1,631 @@
-#Test oneOf
+# Test oneOf
 def testOneOf():
     assert oneOf(2, [1, 2, 3]) == Or(False, True, False)
     assert oneOf(4, [1, 2, 3]) == Or(False, False, False)
     assert oneOf(4, [4, 4, 4]) == Or(True, True, True)
     assert not oneOf(4, [1, 2, 3]) == Or(False, False, True)
 
-#Test binOp
+# Test removeIfPresent
+def testRemoveIfPresent():
+    assert removeIfPresent(1, [1,2,3,4,5]) == [2, 3, 4, 5]
+    assert removeIfPresent(7, [1,2,3,4,5]) == [1, 2, 3, 4, 5]
+    assert not removeIfPresent(1, [1,2,3,4,5]) == []
+
+# Test binOp
 def testBinOp():
-    assert binOp(24, [4,6]) == [24]
-    assert binOp(12, [4,3]) == [12]
-    assert not binOp(6, [4,3]) == [6]
-    assert binOp(6, [4,3]) == []
-
-#Test removeFrom
-def testRemoveFrom():
-    assert removeFrom(3, [1, 2, 4, 5, 3, 11]) == [1, 2, 4, 5, 11]
-    assert removeFrom(3, [41, 56, 57, 101]) == [41, 56, 57, 101]
-    assert removeFrom(3, []) == []
-
-#Test for3terms
-def testFor3Terms():
-    assert for3terms(24, [3, 1, 6]) == [24]
-    assert for3terms(9, [1, 2, 3]) == [9]
-    assert not for3terms(24, [3, 1, 5]) == [24]
-    assert for3terms(24, [3, 1, 5]) == []
-
-#Test oneIterFor3
-def testOneIterFor3():
-    assert oneIterFor3(3, 21, [2,5]) == True
-    assert oneIterFor3(3, 22, [2,5]) == False
-    assert oneIterFor3(3, 21, [2,4,1]) == False
-
-#Test for4terms
-def testFor4Terms():
-    assert for4terms(11, [1,3,5,2]) == [11, 11, 11, 11]
-    assert for4terms(15, [1,3,5,2]) == [15, 15, 15]
-    assert for4terms(45, [1,3,5,2]) == [45, 45]
-    assert for4terms(63, [1,3,5,2]) == []
-    assert not for4terms(41, [1,3,5,2]) == [41]
-
-#Test oneIterFor4
-def testOneIterFor4():
-    assert oneIterFor4(3, 11, [1, 2, 4, 5]) == True
-    assert oneIterFor4(3, 11, [1, 2, 4, 5, 6]) == True
-    assert oneIterFor4(3, 73, [1, 2, 4, 5]) == False
-    assert oneIterFor4(3, 97, [1, 2, 4, 5, 6]) == False
-
-#Test for5terms
-def testFor5Terms():
-    assert for5terms(31, [1, 2, 3, 4, 5]) == [31, 31, 31, 31, 31]
-    assert for5terms(21, [1, 2, 3, 4, 6]) == [21, 21, 21, 21, 21]
-    assert not for5terms(71, [1, 2, 3, 4, 5]) == [71]
-    assert not for5terms(24, [1, 2, 3, 4, 5]) == None
-
-#Test findAddValWith
-def testFindAddValWith():
-    assert findAddValWith(3, 34, [1, 4], 2) == False
-    assert findAddValWith(3, 21, [4, 5,3], 4) == False
-    assert findAddValWith(3, 12, [4, 5], 1) == True
-
-#Test findSubValWith
-def testFindSubValWith():
-    assert findSubValWith(21, 15, [6, 4], 1) == True
-    assert findSubValWith(21, 15, [6, 4], 2) == False
-    assert findSubValWith(21, 11, [6, 4, 1], 3) == False
+    a, b = Reals('a b')
+    assert binOp(21, 4, '*', 3) == Or(And(True, a*b == 21),
+                                      And(False, a/b == 21),
+                                      And(False, a - b == 21),
+                                      And(False, a + b == 21))
     
-#Test findDivValWith
-def testFindDivValWith():
-    assert findDivValWith(1,5,[2,3,4],2) == True
-    assert findDivValWith(4,2,[2,5,3],1) == True
-    assert findDivValWith(4,7,[12,5,3],2) == False
-
-#Test findMulValWith
-def testFindMulValWith():
-    assert findMulValWith(4,7,[12,5,3],2) == False
-    assert findMulValWith(2,16,[8,5,8],3) == True
-    assert findMulValWith(3,21,[7,5,4,9],4) == True
+    assert binOp(46, 5, '/',3) == Or(And(False, a*b == 46),
+                                     And(True, a/b == 46),
+                                     And(False, a - b == 46),
+                                     And(False, a + b == 46))
     
-#Will print "Everything passed" if none of the test fails
+    assert binOp(6, 1, '+', 2) == Or(And(False, a*b == 6),
+                                     And(False, a/b == 6),
+                                     And(False, a - b == 6),
+                                     And(True, a + b == 6))
+    
+    assert not binOp(36, 2, '-',3) == Or(And(False, a*b == 36),
+                                         And(False, a/b == 36),
+                                         And(True, a - b == 36),
+                                         And(True, a + b == 36))
+
+# Test triOp
+def testTriOp():
+    a, b, c = Reals('a b c')
+    assert triOp(21, 1, '+', 4, '*', 5) == Or(And(True,
+                                                  Or(And(False, a*b == 21/5),
+                                                     And(False, a/b == 21/5),
+                                                     And(False, a - b == 21/5),
+                                                     And(True, a + b == 21/5))),
+                                              And(False,
+                                                  Or(And(False, a*b == 105),
+                                                     And(False, a/b == 105),
+                                                     And(False, a - b == 105),
+                                                     And(True, a + b == 105))),
+                                              And(False,
+                                                  Or(And(False, a*b == 26),
+                                                     And(False, a/b == 26),
+                                                     And(False, a - b == 26),
+                                                     And(True, a + b == 26))),
+                                              And(False,
+                                                  Or(And(False, a*b == 16),
+                                                     And(False, a/b == 16),
+                                                     And(False, a - b == 16),
+                                                     And(True, a + b == 16))))
+    assert triOp(25, 2, '-', 4, '/', 6) == Or(And(False,
+                                                  Or(And(False,
+                                                         a*b == 4166666666666667/1000000000000000),
+                                                     And(False,
+                                                         a/b == 4166666666666667/1000000000000000),
+                                                     And(True,
+                                                         a - b == 4166666666666667/1000000000000000),
+                                                     And(False,
+                                                         a + b == 4166666666666667/1000000000000000))),
+                                              And(True,
+                                                  Or(And(False, a*b == 150),
+                                                     And(False, a/b == 150),
+                                                     And(True, a - b == 150),
+                                                     And(False, a + b == 150))),
+                                                  And(False,
+                                                      Or(And(False, a*b == 31),
+                                                         And(False, a/b == 31),
+                                                         And(True, a - b == 31),
+                                                         And(False, a + b == 31))),
+                                                  And(False,
+                                                      Or(And(False, a*b == 19),
+                                                         And(False, a/b == 19),
+                                                         And(True, a - b == 19),
+                                                         And(False, a + b == 19))))
+
+    assert triOp(55, 21, '-', 4, '+', 11) == Or(And(False,
+                                                        Or(And(False, a*b == 5),
+                                                           And(False, a/b == 5),
+                                                           And(True, a - b == 5),
+                                                           And(False, a + b == 5))),
+                                                    And(False,
+                                                        Or(And(False, a*b == 605),
+                                                           And(False, a/b == 605),
+                                                           And(True, a - b == 605),
+                                                           And(False, a + b == 605))),
+                                                    And(False,
+                                                        Or(And(False, a*b == 66),
+                                                           And(False, a/b == 66),
+                                                           And(True, a - b == 66),
+                                                           And(False, a + b == 66))),
+                                                    And(True,
+                                                        Or(And(False, a*b == 44),
+                                                           And(False, a/b == 44),
+                                                           And(True, a - b == 44),
+                                                           And(False, a + b == 44))))
+
+    assert not triOp(31, 17, '/', 9, '*', 5) == Or(And(False,
+                                                           Or(And(False, a*b == 31/5),
+                                                              And(True, a/b == 31/5),
+                                                              And(False, a - b == 31/5),
+                                                              And(False, a + b == 31/5))),
+                                                       And(False,
+                                                           Or(And(False, a*b == 155),
+                                                              And(True, a/b == 155),
+                                                              And(False, a - b == 155),
+                                                              And(False, a + b == 155))),
+                                                       And(False,
+                                                           Or(And(False, a*b == 36),
+                                                              And(True, a/b == 36),
+                                                              And(False, a - b == 36),
+                                                              And(False, a + b == 36))),
+                                                       And(False,
+                                                           Or(And(False, a*b == 26),
+                                                              And(True, a/b == 26),
+                                                              And(False, a - b == 26),
+                                                              And(False, a + b == 26))))
+
+# Test quadOp
+def testQuadOp():
+    a, b, c = Reals('a b c')
+    o3 = Strings('o3')
+    assert quadOp(21, 1, '+', 2, '-', 4, '/', 6) == Or(And(False,
+                                                           Or(And(False,
+                                                                  Or(And(False, a*b == 7/8),
+                                                                     And(False, a/b == 7/8),
+                                                                     And(False, a - b == 7/8),
+                                                                     And(True, a + b == 7/8))),
+                                                              And(False,
+                                                                  Or(And(False, a*b == 14),
+                                                                     And(False, a/b == 14),
+                                                                     And(False, a - b == 14),
+                                                                     And(True, a + b == 14))),
+                                                              And(True,
+                                                                  Or(And(False, a*b == 15/2),
+                                                                     And(False, a/b == 15/2),
+                                                                     And(False, a - b == 15/2),
+                                                                     And(True, a + b == 15/2))),
+                                                              And(False,
+                                                                  Or(And(False, a*b == -1/2),
+                                                                     And(False, a/b == -1/2),
+                                                                     And(False, a - b == -1/2),
+                                                                     And(True, a + b == -1/2))))),
+                                                       And(True,
+                                                           Or(And(False,
+                                                                  Or(And(False, a*b == 63/2),
+                                                                     And(False, a/b == 63/2),
+                                                                     And(False, a - b == 63/2),
+                                                                     And(True, a + b == 63/2))),
+                                                              And(False,
+                                                                  Or(And(False, a*b == 504),
+                                                                     And(False, a/b == 504),
+                                                                     And(False, a - b == 504),
+                                                                     And(True, a + b == 504))),
+                                                              And(True,
+                                                                  Or(And(False, a*b == 130),
+                                                                     And(False, a/b == 130),
+                                                                     And(False, a - b == 130),
+                                                                     And(True, a + b == 130))),
+                                                              And(False,
+                                                                  Or(And(False, a*b == 122),
+                                                                     And(False, a/b == 122),
+                                                                     And(False, a - b == 122),
+                                                                     And(True, a + b == 122))))),
+                                                       And(False,
+                                                           Or(And(False,
+                                                                  Or(And(False, a*b == 27/4),
+                                                                     And(False, a/b == 27/4),
+                                                                     And(False, a - b == 27/4),
+                                                                     And(True, a + b == 27/4))),
+                                                              And(False,
+                                                                  Or(And(False, a*b == 108),
+                                                                     And(False, a/b == 108),
+                                                                     And(False, a - b == 108),
+                                                                     And(True, a + b == 108))),
+                                                              And(True,
+                                                                  Or(And(False, a*b == 31),
+                                                                     And(False, a/b == 31),
+                                                                     And(False, a - b == 31),
+                                                                     And(True, a + b == 31))),
+                                                              And(False,
+                                                                  Or(And(False, a*b == 23),
+                                                                     And(False, a/b == 23),
+                                                                     And(False, a - b == 23),
+                                                                     And(True, a + b == 23))))),
+                                                       And(False,
+                                                           Or(And(False,
+                                                                  Or(And(False, a*b == 15/4),
+                                                                     And(False, a/b == 15/4),
+                                                                     And(False, a - b == 15/4),
+                                                                     And(True, a + b == 15/4))),
+                                                              And(False,
+                                                                  Or(And(False, a*b == 60),
+                                                                     And(False, a/b == 60),
+                                                                     And(False, a - b == 60),
+                                                                     And(True, a + b == 60))),
+                                                              And(True,
+                                                                  Or(And(False, a*b == 19),
+                                                                     And(False, a/b == 19),
+                                                                     And(False, a - b == 19),
+                                                                     And(True, a + b == 19))),
+                                                              And(False,
+                                                                  Or(And(False, a*b == 11),
+                                                                     And(False, a/b == 11),
+                                                                     And(False, a - b == 11),
+                                                                     And(True, a + b == 11))))))
+
+    assert quadOp(31, 2, '*', 7, '/', 4, '/', 11) ==  Or(And(False,
+                                                             Or(And(False,
+                                                                    Or(And(True,
+                                                                           a*b == 3522727272727273/5000000000000000),
+                                                                       And(False,
+                                                                           a/b == 3522727272727273/5000000000000000),
+                                                                       And(False,
+                                                                           a - b == 3522727272727273/5000000000000000),
+                                                                       And(False,
+                                                                           a + b == 3522727272727273/5000000000000000))),
+                                                                And(True,
+                                                                    Or(And(True,
+                                                                           a*b == 11272727272727273/1000000000000000),
+                                                                       And(False,
+                                                                           a/b == 11272727272727273/1000000000000000),
+                                                                       And(False,
+                                                                           a - b == 11272727272727273/1000000000000000),
+                                                                       And(False,
+                                                                           a + b == 11272727272727273/1000000000000000))),
+                                                                And(False,
+                                                                    Or(And(True,
+                                                                           a*b == 3409090909090909/500000000000000),
+                                                                       And(False,
+                                                                           a/b == 3409090909090909/500000000000000),
+                                                                       And(False,
+                                                                           a - b == 3409090909090909/500000000000000),
+                                                                       And(False,
+                                                                           a + b == 3409090909090909/500000000000000))),
+                                                                And(False,
+                                                                    Or(And(True,
+                                                                           a*b == -11818181818181817/10000000000000000),
+                                                                       And(False,
+                                                                           a/b == -11818181818181817/10000000000000000),
+                                                                       And(False,
+                                                                           a - b == -11818181818181817/10000000000000000),
+                                                                       And(False,
+                                                                           a + b == -11818181818181817/10000000000000000))))),
+                                                         And(True,
+                                                             Or(And(False,
+                                                                    Or(And(True, a*b == 341/4),
+                                                                       And(False, a/b == 341/4),
+                                                                       And(False, a - b == 341/4),
+                                                                       And(False, a + b == 341/4))),
+                                                                And(True,
+                                                                    Or(And(True, a*b == 1364),
+                                                                       And(False, a/b == 1364),
+                                                                       And(False, a - b == 1364),
+                                                                       And(False, a + b == 1364))),
+                                                                And(False,
+                                                                    Or(And(True, a*b == 345),
+                                                                       And(False, a/b == 345),
+                                                                       And(False, a - b == 345),
+                                                                       And(False, a + b == 345))),
+                                                                And(False,
+                                                                    Or(And(True, a*b == 337),
+                                                                       And(False, a/b == 337),
+                                                                       And(False, a - b == 337),
+                                                                       And(False, a + b == 337))))),
+                                                         And(False,
+                                                             Or(And(False,
+                                                                    Or(And(True, a*b == 21/2),
+                                                                       And(False, a/b == 21/2),
+                                                                       And(False, a - b == 21/2),
+                                                                       And(False, a + b == 21/2))),
+                                                                And(True,
+                                                                    Or(And(True, a*b == 168),
+                                                                       And(False, a/b == 168),
+                                                                       And(False, a - b == 168),
+                                                                       And(False, a + b == 168))),
+                                                                And(False,
+                                                                    Or(And(True, a*b == 46),
+                                                                       And(False, a/b == 46),
+                                                                       And(False, a - b == 46),
+                                                                       And(False, a + b == 46))),
+                                                                And(False,
+                                                                    Or(And(True, a*b == 38),
+                                                                       And(False, a/b == 38),
+                                                                       And(False, a - b == 38),
+                                                                       And(False, a + b == 38))))),
+                                                         And(False,
+                                                             Or(And(False,
+                                                                    Or(And(True, a*b == 5),
+                                                                       And(False, a/b == 5),
+                                                                       And(False, a - b == 5),
+                                                                       And(False, a + b == 5))),
+                                                                And(True,
+                                                                    Or(And(True, a*b == 80),
+                                                                       And(False, a/b == 80),
+                                                                       And(False, a - b == 80),
+                                                                       And(False, a + b == 80))),
+                                                                And(False,
+                                                                    Or(And(True, a*b == 24),
+                                                                       And(False, a/b == 24),
+                                                                       And(False, a - b == 24),
+                                                                       And(False, a + b == 24))),
+                                                                And(False,
+                                                                    Or(And(True, a*b == 16),
+                                                                       And(False, a/b == 16),
+                                                                       And(False, a - b == 16),
+                                                                       And(False, a + b == 16))))))
+
+    assert not quadOp(41, 12, '*', 5, '-', 4, '/', 2) == Or(And(False,
+                                                                Or(And(False,
+                                                                       Or(And(False, a*b == 41/8),
+                                                                          And(False, a/b == 41/8),
+                                                                          And(False, a - b == 41/8),
+                                                                          And(False, a + b == 41/8))),
+                                                                   And(False,
+                                                                       Or(And(True, a*b == 82),
+                                                                          And(False, a/b == 82),
+                                                                          And(False, a - b == 82),
+                                                                          And(False, a + b == 82))),
+                                                                   And(True,
+                                                                       Or(And(True, a*b == 49/2),
+                                                                          And(False, a/b == 49/2),
+                                                                          And(False, a - b == 49/2),
+                                                                          And(False, a + b == 49/2))),
+                                                                   And(False,
+                                                                       Or(And(True, a*b == 33/2),
+                                                                          And(False, a/b == 33/2),
+                                                                          And(False, a - b == 33/2),
+                                                                          And(False, a + b == 33/2))))),
+                                                            And(True,
+                                                                Or(And(False,
+                                                                       Or(And(True, a*b == 41/2),
+                                                                          And(False, a/b == 41/2),
+                                                                          And(False, a - b == 41/2),
+                                                                          And(False, a + b == 41/2))),
+                                                                   And(False,
+                                                                       Or(And(True, a*b == 328),
+                                                                          And(False, a/b == 328),
+                                                                          And(False, a - b == 328),
+                                                                          And(False, a + b == 328))),
+                                                                   And(True,
+                                                                       Or(And(True, a*b == 86),
+                                                                          And(False, a/b == 86),
+                                                                          And(False, a - b == 86),
+                                                                          And(False, a + b == 86))),
+                                                                   And(False,
+                                                                       Or(And(True, a*b == 78),
+                                                                          And(False, a/b == 78),
+                                                                          And(False, a - b == 78),
+                                                                          And(False, a + b == 78))))),
+                                                            And(False,
+                                                                Or(And(False,
+                                                                       Or(And(True, a*b == 43/4),
+                                                                          And(False, a/b == 43/4),
+                                                                          And(False, a - b == 43/4),
+                                                                          And(False, a + b == 43/4))),
+                                                                   And(False,
+                                                                       Or(And(True, a*b == 172),
+                                                                          And(False, a/b == 172),
+                                                                          And(False, a - b == 172),
+                                                                          And(False, a + b == 172))),
+                                                                   And(True,
+                                                                       Or(And(True, a*b == 47),
+                                                                          And(False, a/b == 47),
+                                                                          And(False, a - b == 47),
+                                                                          And(False, a + b == 47))),
+                                                                   And(False,
+                                                                       Or(And(True, a*b == 39),
+                                                                          And(False, a/b == 39),
+                                                                          And(False, a - b == 39),
+                                                                          And(False, a + b == 39))))),
+                                                            And(False,
+                                                                Or(And(False,
+                                                                       Or(And(True, a*b == 39/4),
+                                                                          And(False, a/b == 39/4),
+                                                                          And(False, a - b == 39/4),
+                                                                          And(False, a + b == 39/4))),
+                                                                   And(False,
+                                                                       Or(And(True, a*b == 156),
+                                                                          And(False, a/b == 156),
+                                                                          And(False, a - b == 156),
+                                                                          And(False, a + b == 156))),
+                                                                   And(True,
+                                                                       Or(And(True, a*b == 43),
+                                                                          And(False, a/b == 43),
+                                                                          And(False, a - b == 43),
+                                                                          And(False, a + b == 43))),
+                                                                   And(False,
+                                                                       Or(And(True, a*b == 35),
+                                                                          And(False, a/b == 35),
+                                                                          And(False, a - b == 35),
+                                                                          And(False, a + b == 35))))))
+
+# Test pentaOp
+def testPentaOp():
+    a, b, c, d = Reals('a b c d')
+    
+    assert not pentaOp(31, 1, '*', 12, '-', 3, '*', 6, '+', 4) == Or(And(False,
+                                                                     Or(And(False,
+                                                                            Or(And(False,
+                                                                                   Or(And(False, a*b == 71),
+                                                                                      And(False, a/b == 71),
+                                                                                      And(False, a - b == 71),
+                                                                                      And(True, a + b == 71))),
+                                                                               And(False,
+                                                                                   Or(And(False, a*b == 71),
+                                                                                      And(False, a/b == 71),
+                                                                                      And(False, a - b == 71),
+                                                                                      And(True, a + b == 71))),
+                                                                               And(True,
+                                                                                   Or(And(False, a*b == 72),
+                                                                                      And(False, a/b == 72),
+                                                                                      And(False, a - b == 72),
+                                                                                      And(True, a + b == 72))),
+                                                                               And(False,
+                                                                                   Or(And(False, a*b == 70),
+                                                                                      And(False, a/b == 70),
+                                                                                      And(False, a - b == 70),
+                                                                                      And(True, a + b == 70))))),
+                                                                        And(False,
+                                                                            Or(And(False,
+                                                                                   Or(And(False, a*b == 71),
+                                                                                      And(False, a/b == 71),
+                                                                                      And(False, a - b == 71),
+                                                                                      And(True, a + b == 71))),
+                                                                               And(False,
+                                                                                   Or(And(False, a*b == 71),
+                                                                                      And(False, a/b == 71),
+                                                                                      And(False, a - b == 71),
+                                                                                      And(True, a + b == 71))),
+                                                                               And(True,
+                                                                                   Or(And(False, a*b == 72),
+                                                                                      And(False, a/b == 72),
+                                                                                      And(False, a - b == 72),
+                                                                                      And(True, a + b == 72))),
+                                                                               And(False,
+                                                                                   Or(And(False, a*b == 70),
+                                                                                      And(False, a/b == 70),
+                                                                                      And(False, a - b == 70),
+                                                                                      And(True, a + b == 70))))),
+                                                                        And(False,
+                                                                            Or(And(False,
+                                                                                   Or(And(False, a*b == 72),
+                                                                                      And(False, a/b == 72),
+                                                                                      And(False, a - b == 72),
+                                                                                      And(True, a + b == 72))),
+                                                                               And(False,
+                                                                                   Or(And(False, a*b == 72),
+                                                                                      And(False, a/b == 72),
+                                                                                      And(False, a - b == 72),
+                                                                                      And(True, a + b == 72))),
+                                                                               And(True,
+                                                                                   Or(And(False, a*b == 73),
+                                                                                      And(False, a/b == 73),
+                                                                                      And(False, a - b == 73),
+                                                                                      And(True, a + b == 73))),
+                                                                               And(False,
+                                                                                   Or(And(False, a*b == 71),
+                                                                                      And(False, a/b == 71),
+                                                                                      And(False, a - b == 71),
+                                                                                      And(True, a + b == 71))))),
+                                                                        And(True,
+                                                                            Or(And(False,
+                                                                                   Or(And(False, a*b == 70),
+                                                                                      And(False, a/b == 70),
+                                                                                      And(False, a - b == 70),
+                                                                                      And(True, a + b == 70))),
+                                                                               And(False,
+                                                                                   Or(And(False, a*b == 70),
+                                                                                      And(False, a/b == 70),
+                                                                                      And(False, a - b == 70),
+                                                                                      And(True, a + b == 70))),
+                                                                               And(True,
+                                                                                   Or(And(False, a*b == 71),
+                                                                                      And(False, a/b == 71),
+                                                                                      And(False, a - b == 71),
+                                                                                      And(True, a + b == 71))),
+                                                                               And(False,
+                                                                                   Or(And(False, a*b == 69),
+                                                                                      And(False, a/b == 69),
+                                                                                      And(False, a - b == 69),
+                                                                                      And(True, a + b == 69))))))),
+                                                                 And(False,
+                                                                     Or(And(False,
+                                                                            Or(And(False,
+                                                                                   Or(And(False, a*b == 71),
+                                                                                      And(False, a/b == 71),
+                                                                                      And(False, a - b == 71),
+                                                                                      And(True, a + b == 71))),
+                                                                               And(False,
+                                                                                   Or(And(False, a*b == 71),
+                                                                                      And(False, a/b == 71),
+                                                                                      And(False, a - b == 71),
+                                                                                      And(True, a + b == 71))),
+                                                                               And(True,
+                                                                                   Or(And(False, a*b == 72),
+                                                                                      And(False, a/b == 72),
+                                                                                      And(False, a - b == 72),
+                                                                                      And(True, a + b == 72))),
+                                                                               And(False,
+                                                                                   Or(And(False, a*b == 70),
+                                                                                      And(False, a/b == 70),
+                                                                                      And(False, a - b == 70),
+                                                                                      And(True, a + b == 70))))),
+                                                                        And(False,
+                                                                            Or(And(False,
+                                                                                   Or(And(False, a*b == 71),
+                                                                                      And(False, a/b == 71),
+                                                                                      And(False, a - b == 71),
+                                                                                      And(True, a + b == 71))),
+                                                                               And(False,
+                                                                                   Or(And(False, a*b == 71),
+                                                                                      And(False, a/b == 71),
+                                                                                      And(False, a - b == 71),
+                                                                                      And(True, a + b == 71))),
+                                                                               And(True,
+                                                                                   Or(And(False, a*b == 72),
+                                                                                      And(False, a/b == 72),
+                                                                                      And(False, a - b == 72),
+                                                                                      And(True, a + b == 72))),
+                                                                               And(False,
+                                                                                   Or(And(False, a*b == 70),
+                                                                                      And(False, a/b == 70),
+                                                                                      And(False, a - b == 70),
+                                                                                      And(True, a + b == 70))))),
+                                                                        And(False,
+                                                                            Or(And(False,
+                                                                                   Or(And(False, a*b == 72),
+                                                                                      And(False, a/b == 72),
+                                                                                      And(False, a - b == 72),
+                                                                                      And(True, a + b == 72))),
+                                                                               And(False,
+                                                                                   Or(And(False, a*b == 72),
+                                                                                      And(False, a/b == 72),
+                                                                                      And(False, a - b == 72),
+                                                                                      And(True, a + b == 72))),
+                                                                               And(True,
+                                                                                   Or(And(False, a*b == 73),
+                                                                                      And(False, a/b == 73),
+                                                                                      And(False, a - b == 73),
+                                                                                      And(True, a + b == 73))),
+                                                                               And(False,
+                                                                                   Or(And(False, a*b == 71),
+                                                                                      And(False, a/b == 71),
+                                                                                      And(False, a - b == 71),
+                                                                                      And(True, a + b == 71))))),
+                                                                        And(True,
+                                                                            Or(And(False,
+                                                                                   Or(And(False, a*b == 70),
+                                                                                      And(False, a/b == 70),
+                                                                                      And(False, a - b == 70),
+                                                                                      And(True, a + b == 70))),
+                                                                               And(False,
+                                                                                   Or(And(False, a*b == 70),
+                                                                                      And(False, a/b == 70),
+                                                                                      And(False, a - b == 70),
+                                                                                      And(True, a + b == 70))),
+                                                                               And(True,
+                                                                                   Or(And(False, a*b == 71),
+                                                                                      And(False, a/b == 71),
+                                                                                      And(False, a - b == 71),
+                                                                                      And(True, a + b == 71))),
+                                                                               And(False,
+                                                                                   Or(And(False, a*b == 69),
+                                                                                      And(False, a/b == 69),
+                                                                                      And(False, a - b == 69),
+                                                                                      And(True, a + b == 69))))))),
+                                                                 And(False,
+                                                                     Or(And(False,
+                                                                            Or(And(False,
+                                                                                   Or(And(False, a*b == 72),
+                                                                                      And(False, a/b == 72),
+                                                                                      And(False, a - b == 72),
+                                                                                      And(True, a + b == 72))),
+                                                                               And(False,
+                                                                                   Or(And(False, a*b == 72),
+                                                                                      And(False, a/b == 72),
+                                                                                      And(False, a - b == 72),
+                                                                                      And(True, a + b == 72))),
+                                                                               And(True,
+                                                                                   Or(And(False, a*b == 73),
+                                                                                      And(False, a/b == 73),
+                                                                                      And(False, a - b == 73),
+                                                                                      And(True, a + b == 73))),
+                                                                               And(False,
+                                                                                   Or(And(False, a*b == 71),
+                                                                                      And(False, a/b == 71),
+                                                                                      And(False, a - b == 71),
+                                                                                      And(True, a + b == 71))))),
+                                                                        And(False,
+                                                                            Or(And(False,
+                                                                                   Or(And(False, a*b == 72),
+                                                                                      And(False, a/b == 72),
+                                                                                      And(False, a - b == 72),
+                                                                                      And(True, a + b == 72))),
+                                                                               And(False,
+                                                                                   Or(And(False, a*b == 72),
+                                                                                   And(False, a/b == 72),
+                                                                                   And(False, a - b == 72),
+                                                                                   And(True, a + b == 72))))))))
+
+# Test outDistinct  
+def testOurDistinct():
+    assert our_distinct(1,2,3,4,4,[1,2,3,4]) == And(True, True, True, True, False)
+    assert our_distinct(1,2,3,4,5,[1,2,3,4,5]) == And(True, True, True, True, True)
+    assert our_distinct(1,1,1,1,1,[1]) == And(True, False, False, False, False)
+
+# Test findSolutions
+def testFindSolutions():
+    assert findSolutions(21,[1,2,3,4,5]) == None
+    assert findSolutions(25,[1,2,3,6,5]) == None
+    
+# Will print "Everything passed" if none of the test fails
 if __name__ == "__main__":
     testOneOf()
     testBinOp()
-    testRemoveFrom()
-    testFor3Terms()
-    testOneIterFor3()
-    testFor4Terms()
-    testOneIterFor4()
-    testFor5Terms()
-    testFindAddValWith()
-    testFindSubValWith()
-    testFindDivValWith()
-    testFindMulValWith()
+    testTriOp()
+    testQuadOp()
+    testPentaOp()
+    testRemoveIfPresent()
+    testOurDistinct()
+    testFindSolutions()
     print("Everything passed")
