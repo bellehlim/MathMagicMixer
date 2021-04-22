@@ -35,6 +35,6 @@ z3 --version
 Note: For code to compile correctly, z3 version must be 4.8.11
 
 # Running the Program
-Open up a Python IDE like IDLE. Download **MathMagicMixer_v2.py** and Run it. You can now call the function *for5terms* and provide it your target number, a number 6 through 36, and your list of five other dice values, 1 through 6, in an array with square brackets. 
+Open up a Python IDE like IDLE. Download **MathMagicMixer_v4.py** and Run it. You can now call the function *findSolutions* and provide it your target number, a number 6 through 36, and your list of five other dice values, 1 through 6, in an array with square brackets. 
 
-An example call would be *for5terms(23, [1,2,4,5,6])* representing a target number of 23 and the 5 remanining numbers as 1, 2, 4, 5, and 6. Running this command begins the program which currently takes on the magnitude of 3 minutes to run.
+An example call would be *findSolutions(23, [1,2,4,5,6])* representing a target number of 23 and the 5 remanining numbers as 1, 2, 4, 5, and 6. Running this command begins the program which will output all solutions it finds.
