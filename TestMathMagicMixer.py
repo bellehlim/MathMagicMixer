@@ -402,7 +402,6 @@ def testQuadOp():
 # Test pentaOp
 def testPentaOp():
     a, b, c, d = Reals('a b c d')
-    o4 = String('o4')
     
     assert not pentaOp(31, 1, '*', 12, '-', 3, '*', 6, '+', 4) == Or(And(False,
                                                                      Or(And(False,
