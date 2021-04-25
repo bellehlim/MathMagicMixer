@@ -400,6 +400,7 @@ def testQuadOp():
                                                                           And(False, a + b == 35))))))
 
 # Test pentaOp
+# NOTE: output overflow prevented us from being able to take the results from a valid call
 def testPentaOp():
     a, b, c, d = Reals('a b c d')
     
