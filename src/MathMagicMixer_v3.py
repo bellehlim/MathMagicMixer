@@ -48,7 +48,6 @@ def findSolutions(target, given):
         op3 = as_string(t.model()[o3])
         op4 = as_string(t.model()[o4])
         if exprToTarget(target, [n1, op1, n2, op2, n3, op3, n4, op4, n5]):
-            print("solution:")
             print (n1, op1, n2, op2, n3, op3, n4, op4, n5)
         t.add(Not(And(a == t.model()[a],
                       b == t.model()[b],
