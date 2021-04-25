@@ -1,4 +1,3 @@
-
 from z3 import *
 
 #checks if x is an element in l
