@@ -9,15 +9,12 @@ def oneOf(x, l):
 
 #checks if the broken down expression equals the target
 def exprToTarget(target, exprArray):
-    #print("exprArray: ", exprArray)
     expr = String('expr')
     val = Int('val')
     newArray = []
     newArray.extend(exprArray)
     exprConcat = " ".join(newArray)
-    #print(exprConcat)
     val = eval(exprConcat)
-    #print(val)
     return val == target
 
 #main -- provide it the target number of list of 5 other numbers          
