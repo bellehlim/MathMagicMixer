@@ -105,7 +105,7 @@ def oneIterFor4(a, target, given):
              findMulValWith(a, target, lst, 3)))
     return s.check() == sat
 
-
+# ex. target: 36, given: [3, 6, 4, 1, 2]
 #prints all satisfying arithmetic 4-term combos from lst to get target
 def for5terms(target, given):
     #checks inputs are valid
