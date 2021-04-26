@@ -101,8 +101,8 @@ w.add(Or(a * b * c * d * e == target,
 #print all satisfying models
 while w.check() == sat:
     print ("(", w.model()[a], w.model()[b], w.model()[c], w.model()[d], w.model()[e], ")")
-    w.add(a != w.model()[a],
-          b != w.model()[b],
-          c != w.model()[c],
-          d != w.model()[d],
-          e != w.model()[e])
+    w.add(And(a != w.model()[a],
+              b != w.model()[b],
+              c != w.model()[c],
+              d != w.model()[d],
+              e != w.model()[e]))
